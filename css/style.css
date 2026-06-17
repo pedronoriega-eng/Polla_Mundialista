@@ -1,0 +1,331 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --bg-dark: #0a0f1d;
+  --bg-card: rgba(20, 27, 45, 0.75);
+  --border-glow: rgba(255, 255, 255, 0.08);
+  
+  /* Paleta Patria de Colombia (Ajustada para diseño premium) */
+  --col-yellow: #FFCD00;
+  --col-blue: #003087;
+  --col-red: #C8102E;
+  
+  /* Variantes translúcidas y glows */
+  --yellow-glow: rgba(255, 205, 0, 0.2);
+  --yellow-light: rgba(255, 205, 0, 0.1);
+  --blue-glow: rgba(0, 48, 135, 0.4);
+  --red-glow: rgba(200, 16, 46, 0.3);
+  
+  --text-white: #f8fafc;
+  --text-slate: #94a3b8;
+  --text-muted: #64748b;
+  
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 10% 20%, var(--yellow-light) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, var(--blue-glow) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(200, 16, 46, 0.05) 0%, transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Decoraciones patrias de fondo */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(to right, var(--col-yellow) 0%, var(--col-yellow) 50%, var(--col-blue) 50%, var(--col-blue) 75%, var(--col-red) 75%, var(--col-red) 100%);
+  z-index: 10;
+}
+
+/* Contenedor tipo Glassmorphism */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glow);
+  border-radius: 24px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 
+    0 20px 40px -15px rgba(0, 0, 0, 0.5),
+    0 0 50px -10px var(--yellow-glow);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.glass-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  transition: 0.5s;
+}
+
+.glass-card:hover::after {
+  left: 100%;
+}
+
+/* Títulos y textos */
+.title-patriotic {
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, var(--col-yellow) 30%, #fff 70%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 12px rgba(255, 205, 0, 0.1);
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  color: var(--text-slate);
+  text-align: center;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+/* Inputs Premium */
+.input-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.input-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-slate);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.input-field {
+  width: 100%;
+  background: rgba(10, 15, 29, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  color: var(--text-white);
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.input-field:focus {
+  border-color: var(--col-yellow);
+  box-shadow: 0 0 15px rgba(255, 205, 0, 0.15);
+  background: rgba(10, 15, 29, 0.85);
+}
+
+/* Botones con efectos patrios */
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, var(--col-yellow) 0%, #E6B800 100%);
+  color: #05070f;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 8px 20px -6px var(--yellow-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -4px var(--yellow-glow);
+  filter: brightness(1.1);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Animaciones de Error */
+.error-msg {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: none;
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* Bandera de Colombia circular */
+.flag-container {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  margin: 0 auto 1.5rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flag-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Estilo del Partido */
+.match-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 15, 29, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.team-flag {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 0.5rem;
+}
+
+.team-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-white);
+}
+
+.vs {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--col-yellow);
+  padding: 0 1rem;
+}
+
+/* Pronóstico Marcador */
+.score-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.score-input {
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  border-radius: 12px;
+}
+
+.score-divider {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-slate);
+}
+
+/* Header para app.html y dashboard.html */
+.app-header {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-white);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Alertas de Notificación */
+.notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--bg-card);
+  border-left: 4px solid var(--col-yellow);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transform: translateY(150%);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 100;
+}
+
+.notification.show {
+  transform: translateY(0);
+}

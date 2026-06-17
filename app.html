@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registra tu Pronóstico - Polla Tricolor</title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="description" content="Ingresa tu marcador para el partido Colombia vs. Uzbekistán en la polla oficial.">
+  <style>
+    /* Estilos específicos para la tarjeta de pronóstico */
+    .vs-badge {
+      background: linear-gradient(135deg, var(--col-yellow) 0%, var(--col-red) 100%);
+      color: #05070f;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      box-shadow: 0 4px 10px rgba(255, 205, 0, 0.2);
+    }
+    .score-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin: 1.5rem 0;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 1.5rem;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .prediction-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-slate);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header de Navegación -->
+  <div class="app-header">
+    <a href="login.html" class="btn-secondary">🔒 Salir</a>
+    <a href="dashboard.html" class="btn-secondary">📊 Ver Resultados</a>
+  </div>
+
+  <div class="glass-card">
+    <h1 class="title-patriotic">Tu Apuesta</h1>
+    <p class="subtitle">Ingresa tus datos y pronostica el marcador final de hoy.</p>
+    
+    <!-- Tarjeta del Partido -->
+    <div class="match-card">
+      <div class="team">
+        <img src="https://flagcdn.com/w160/co.png" alt="Bandera de Colombia" class="team-flag">
+        <span class="team-name">Colombia</span>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="team">
+        <img src="https://flagcdn.com/w160/uz.png" alt="Bandera de Uzbekistán" class="team-flag">
+        <span class="team-name">Uzbekistán</span>
+      </div>
+    </div>
+
+    <!-- Formulario del Apostador -->
+    <form id="bet-form">
+      <div class="input-group">
+        <label for="fullname" class="input-label">Nombre Completo</label>
+        <input 
+          type="text" 
+          id="fullname" 
+          class="input-field" 
+          placeholder="Escribe tu nombre y apellido" 
+          required
+        >
+      </div>
+
+      <div class="prediction-title">Pronóstico del Marcador</div>
+      <div class="score-container">
+        <div class="team-prediction">
+          <input 
+            type="number" 
+            id="goals-col" 
+            class="input-field score-input" 
+            min="0" 
+            max="20" 
+            placeholder="0" 
+            required
+          >
+          <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles COL</div>
+        </div>
+        
+        <div class="score-divider">:</div>
+        
+        <div class="team-prediction">
+          <input 
+            type="number" 
+            id="goals-uzb" 
+            class="input-field score-input" 
+            min="0" 
+            max="20" 
+            placeholder="0" 
+            required
+          >
+          <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles UZB</div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary" id="submit-btn">
+        <span>Enviar Pronóstico</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Componente de Notificación -->
+  <div class="notification" id="notification">
+    <div style="background: rgba(255, 205, 0, 0.2); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+      ⚽
+    </div>
+    <div>
+      <h4 style="font-size: 0.9rem; font-weight: 700; color: #fff;" id="notif-title">¡Apuesta Registrada!</h4>
+      <p style="font-size: 0.75rem; color: var(--text-slate);" id="notif-msg">Tu pronóstico se ha guardado correctamente.</p>
+    </div>
+  </div>
+
+  <script>
+    // Seguridad: Bloquear acceso si no está autorizado
+    if (sessionStorage.getItem('authorized') !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    const betForm = document.getElementById('bet-form');
+    const fullnameInput = document.getElementById('fullname');
+    const goalsColInput = document.getElementById('goals-col');
+    const goalsUzbInput = document.getElementById('goals-uzb');
+    const notification = document.getElementById('notification');
+    const submitBtn = document.getElementById('submit-btn');
+
+    // Función auxiliar para calcular ganador
+    function calcularGanador(golesCol, golesUzb) {
+      if (golesCol > golesUzb) return "Colombia";
+      if (golesUzb > golesCol) return "Uzbekistán";
+      return "Empate";
+    }
+
+    // --- ESQUELETO DE INTEGRACIÓN SERVERLESS ---
+    // Esta función maneja la persistencia. Inicialmente almacena en localStorage para pruebas
+    // y deja lista la estructura para conectar a Supabase/Firebase.
+    async function guardarApuestaEnBaseDeDatos(apuestaData) {
+      console.log("Preparando envío de datos a la base de datos Serverless:", apuestaData);
+      
+      // 1. Simulación de persistencia local (Offline First)
+      let apuestasLocales = JSON.parse(localStorage.getItem('apuestas_tricolor') || '[]');
+      apuestasLocales.push(apuestaData);
+      localStorage.setItem('apuestas_tricolor', JSON.stringify(apuestasLocales));
+      
+      // 2. Esqueleto listo para producción (Firebase / Supabase)
+      /*
+      try {
+        // Ejemplo Supabase:
+        // const { data, error } = await supabase.from('apuestas').insert([apuestaData]);
+        // if (error) throw error;
+        
+        // Ejemplo Firebase Firestore:
+        // await db.collection('apuestas').add(apuestaData);
+      } catch (err) {
+        console.error("Error al persistir en el servidor:", err);
+      }
+      */
+      
+      return true; // Simulación exitosa
+    }
+
+    betForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const golesCol = parseInt(goalsColInput.value);
+      const golesUzb = parseInt(goalsUzbInput.value);
+      const ganador = calcularGanador(golesCol, golesUzb);
+      
+      const apuestaData = {
+        nombre_apostador: fullnameInput.value.trim(),
+        pronostico: {
+          goles_colombia: golesCol,
+          goles_uzbekistan: golesUzb,
+          ganador: ganador
+        },
+        fecha_apuesta: new Date().toISOString()
+      };
+
+      // Deshabilitar botón durante el envío
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.7';
+      submitBtn.querySelector('span').innerText = 'Guardando...';
+
+      try {
+        await guardarApuestaEnBaseDeDatos(apuestaData);
+        
+        // Mostrar notificación de éxito
+        notification.classList.add('show');
+        
+        // Limpiar formulario
+        betForm.reset();
+
+        // Ocultar notificación y habilitar botón después de 3 segundos
+        setTimeout(() => {
+          notification.classList.remove('show');
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = '1';
+          submitBtn.querySelector('span').innerText = 'Enviar Pronóstico';
+          
+          // Redirigir al dashboard para ver los resultados
+          window.location.href = 'dashboard.html';
+        }, 2500);
+
+      } catch (error) {
+        console.error(error);
+        alert("Ocurrió un error al guardar tu apuesta. Inténtalo de nuevo.");
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        submitBtn.querySelector('span').innerText = 'Enviar Pronóstico';
+      }
+    });
+  </script>
+</body>
+</html>
