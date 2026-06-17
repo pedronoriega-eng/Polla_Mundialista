@@ -137,7 +137,7 @@
   <!-- Header de Navegación -->
   <div class="app-header">
     <a href="app.html" class="btn-secondary">⚽ Volver a Apostar</a>
-    <a href="login.html" class="btn-secondary">🔒 Salir</a>
+    <a href="index.html" class="btn-secondary">🔒 Salir</a>
   </div>
 
   <div class="glass-card-wide">
@@ -192,7 +192,7 @@
   <script>
     // Seguridad: Bloquear acceso si no está autorizado
     if (sessionStorage.getItem('authorized') !== 'true') {
-      window.location.href = 'login.html';
+      window.location.href = 'index.html';
     }
 
     const tableBody = document.getElementById('bets-table-body');

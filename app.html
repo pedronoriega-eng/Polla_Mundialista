@@ -42,7 +42,7 @@
 <body>
   <!-- Header de Navegación -->
   <div class="app-header">
-    <a href="login.html" class="btn-secondary">🔒 Salir</a>
+    <a href="index.html" class="btn-secondary">🔒 Salir</a>
     <a href="dashboard.html" class="btn-secondary">📊 Ver Resultados</a>
   </div>
 
@@ -128,7 +128,7 @@
   <script>
     // Seguridad: Bloquear acceso si no está autorizado
     if (sessionStorage.getItem('authorized') !== 'true') {
-      window.location.href = 'login.html';
+      window.location.href = 'index.html';
     }
 
     const betForm = document.getElementById('bet-form');
