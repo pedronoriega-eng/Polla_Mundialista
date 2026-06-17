@@ -8,6 +8,9 @@
   <meta name="description" content="Resultados en tiempo real de los apostadores y sus pronósticos para Colombia vs. Uzbekistán.">
   <!-- html2pdf.js CDN para exportar reportes en PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- Supabase CDN y configuración -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
   <style>
     /* Estilos del Dashboard */
     .glass-card-wide {
@@ -230,6 +233,14 @@
       window.location.href = 'index.html';
     }
 
+    // Inicializar Supabase si está configurado en js/config.js
+    let supabaseClient = null;
+    if (typeof SUPABASE_URL !== 'undefined' && SUPABASE_URL !== 'TU_SUPABASE_URL_AQUI' && SUPABASE_URL !== '') {
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } else {
+      console.warn("Supabase no configurado en js/config.js. Usando LocalStorage local.");
+    }
+
     const tableBody = document.getElementById('bets-table-body');
     const emptyState = document.getElementById('empty-state-container');
     const statCol = document.getElementById('stat-col');
@@ -290,31 +301,25 @@
       adminErrorMessage.style.display = 'none';
     });
 
-    // --- ESQUELETO DE INTEGRACIÓN SERVERLESS ---
-    // Esta función consume las apuestas. Por ahora lee de localStorage
-    // y está estructurada para enlazarse con Supabase o Firebase.
+    // --- PERSISTENCIA SERVERLESS / LOCAL ---
     async function obtenerApuestasDeBaseDeDatos() {
-      console.log("Solicitando registros de apuestas a la base de datos Serverless...");
-      
-      // 1. Lectura local de Fallback
-      let apuestas = JSON.parse(localStorage.getItem('apuestas_tricolor') || '[]');
-      
-      // Ordenar por fecha descendente
-      apuestas.sort((a, b) => new Date(b.fecha_apuesta) - new Date(a.fecha_apuesta));
-      
-      // 2. Conexión de producción BaaS
-      /*
-      try {
-        // Ejemplo Supabase:
-        // const { data, error } = await supabase.from('apuestas').select('*').order('fecha_apuesta', { ascending: false });
-        // if (error) throw error;
-        // apuestas = data;
-      } catch (err) {
-        console.error("Error al conectar con la base de datos:", err);
+      if (supabaseClient) {
+        console.log("Solicitando registros de apuestas a Supabase...");
+        const { data, error } = await supabaseClient
+          .from('apuestas')
+          .select('*')
+          .order('fecha_apuesta', { ascending: false });
+        if (error) {
+          console.error("Error al conectar con Supabase:", error);
+          return [];
+        }
+        return data || [];
+      } else {
+        // Fallback a LocalStorage local
+        let apuestas = JSON.parse(localStorage.getItem('apuestas_tricolor') || '[]');
+        apuestas.sort((a, b) => new Date(b.fecha_apuesta) - new Date(a.fecha_apuesta));
+        return apuestas;
       }
-      */
-      
-      return apuestas;
     }
 
     // Renderizar la tabla y calcular las estadísticas
@@ -406,32 +411,47 @@
       );
     }
 
-    // Botón para vaciar todos los datos de prueba
-    btnClear.addEventListener('click', () => {
-      if (confirm('¿Estás seguro de que deseas eliminar todos los registros locales de prueba?')) {
-        localStorage.removeItem('apuestas_tricolor');
+    // Botón para vaciar todos los datos de prueba / producción
+    btnClear.addEventListener('click', async () => {
+      if (confirm('¿Estás seguro de que deseas eliminar TODOS los registros de apuestas? Esta acción no se puede deshacer.')) {
+        if (supabaseClient) {
+          console.log("Vaciando tabla apuestas en Supabase...");
+          const { error } = await supabaseClient
+            .from('apuestas')
+            .delete()
+            .neq('nombre_apostador', '');
+          if (error) {
+            console.error("Error al vaciar en Supabase:", error);
+            alert("Error al vaciar la base de datos.");
+            return;
+          }
+        } else {
+          localStorage.removeItem('apuestas_tricolor');
+        }
         cargarDashboard();
       }
     });
 
     // Función para eliminar una apuesta individual
-    function eliminarApuesta(fechaApuesta, nombre) {
+    async function eliminarApuesta(fechaApuesta, nombre) {
       if (confirm(`¿Estás seguro de que deseas eliminar la apuesta de "${nombre}"?`)) {
-        // 1. Eliminar localmente (Offline fallback)
-        let apuestas = JSON.parse(localStorage.getItem('apuestas_tricolor') || '[]');
-        apuestas = apuestas.filter(a => a.fecha_apuesta !== fechaApuesta);
-        localStorage.setItem('apuestas_tricolor', JSON.stringify(apuestas));
-
-        // 2. Esqueleto listo para producción BaaS (Supabase / Firebase)
-        /*
-        try {
-          // Supabase:
-          // const { error } = await supabase.from('apuestas').delete().match({ fecha_apuesta: fechaApuesta });
-          // if (error) throw error;
-        } catch (err) {
-          console.error("Error al eliminar registro:", err);
+        if (supabaseClient) {
+          console.log("Eliminando apuesta de Supabase:", fechaApuesta);
+          const { error } = await supabaseClient
+            .from('apuestas')
+            .delete()
+            .match({ fecha_apuesta: fechaApuesta });
+          if (error) {
+            console.error("Error al eliminar en Supabase:", error);
+            alert("Error al eliminar el registro.");
+            return;
+          }
+        } else {
+          // Eliminar localmente
+          let apuestas = JSON.parse(localStorage.getItem('apuestas_tricolor') || '[]');
+          apuestas = apuestas.filter(a => a.fecha_apuesta !== fechaApuesta);
+          localStorage.setItem('apuestas_tricolor', JSON.stringify(apuestas));
         }
-        */
 
         // Recargar el dashboard
         cargarDashboard();
