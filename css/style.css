@@ -269,10 +269,23 @@ body::before {
 .score-input {
   width: 60px;
   height: 60px;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   text-align: center;
   font-weight: 700;
   border-radius: 12px;
+  padding: 0;
+  line-height: 60px;
+}
+
+/* Ocultar flechas incrementales (spinners) en inputs numéricos */
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.score-input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .score-divider {
