@@ -140,7 +140,36 @@
     <a href="index.html" class="btn-secondary">🔒 Salir</a>
   </div>
 
-  <div class="glass-card-wide">
+  <!-- Formulario de Validación de Admin -->
+  <div class="glass-card" id="admin-gate-card" style="margin: 2rem auto; transition: var(--transition);">
+    <div class="flag-container">
+      <img src="https://flagcdn.com/w160/co.png" alt="Bandera de Colombia" class="flag-img">
+    </div>
+    <h1 class="title-patriotic">Acceso Admin</h1>
+    <p class="subtitle">Solo el administrador de la página puede ver los resultados consolidados. Ingresa la contraseña.</p>
+    
+    <form id="admin-auth-form">
+      <div class="input-group">
+        <label for="admin-password" class="input-label">Contraseña Administrativa</label>
+        <input 
+          type="password" 
+          id="admin-password" 
+          class="input-field" 
+          placeholder="Ingresa la contraseña admin" 
+          required 
+          autocomplete="off"
+        >
+        <span class="error-msg" id="admin-error-message">⚠️ Contraseña administrativa incorrecta.</span>
+      </div>
+      <button type="submit" class="btn-primary">
+        <span>Ingresar al Dashboard</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Contenido del Dashboard, oculto hasta validar contraseña -->
+  <div class="glass-card-wide" id="admin-dashboard-content" style="display: none;">
     <h1 class="title-patriotic" style="margin-bottom: 0.25rem;">Dashboard de Resultados</h1>
     <p class="subtitle" style="margin-bottom: 1.5rem;">Monitoreo en tiempo real de todos los pronósticos registrados.</p>
 
@@ -190,7 +219,7 @@
   </div>
 
   <script>
-    // Seguridad: Bloquear acceso si no está autorizado
+    // Seguridad: Bloquear acceso si no está autorizado a la zona de apuestas
     if (sessionStorage.getItem('authorized') !== 'true') {
       window.location.href = 'index.html';
     }
@@ -202,6 +231,57 @@
     const statEmp = document.getElementById('stat-emp');
     const statTotal = document.getElementById('stat-total');
     const btnClear = document.getElementById('btn-clear');
+
+    // Elementos de validación administrativa
+    const adminGateCard = document.getElementById('admin-gate-card');
+    const adminDashboardContent = document.getElementById('admin-dashboard-content');
+    const adminAuthForm = document.getElementById('admin-auth-form');
+    const adminPasswordInput = document.getElementById('admin-password');
+    const adminErrorMessage = document.getElementById('admin-error-message');
+
+    // Verificar si ya se autenticó como admin
+    function verificarSesionAdmin() {
+      if (sessionStorage.getItem('admin_authorized') === 'true') {
+        adminGateCard.style.display = 'none';
+        adminDashboardContent.style.display = 'block';
+        cargarDashboard();
+      } else {
+        adminGateCard.style.display = 'block';
+        adminDashboardContent.style.display = 'none';
+      }
+    }
+
+    adminAuthForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const enteredPass = adminPasswordInput.value.trim();
+      
+      // Contraseña del administrador requerida: Pnoriega_123
+      if (enteredPass === 'Pnoriega_123') {
+        sessionStorage.setItem('admin_authorized', 'true');
+        adminErrorMessage.style.display = 'none';
+        
+        // Animación de desvanecimiento rápida
+        adminGateCard.style.transform = 'scale(0.95)';
+        adminGateCard.style.opacity = '0';
+        
+        setTimeout(() => {
+          adminGateCard.style.display = 'none';
+          adminDashboardContent.style.display = 'block';
+          cargarDashboard();
+        }, 300);
+      } else {
+        adminErrorMessage.style.display = 'block';
+        adminErrorMessage.style.animation = 'none';
+        adminErrorMessage.offsetHeight; // forzar reflow
+        adminErrorMessage.style.animation = 'shake 0.3s ease-in-out';
+        adminPasswordInput.value = '';
+        adminPasswordInput.focus();
+      }
+    });
+
+    adminPasswordInput.addEventListener('input', () => {
+      adminErrorMessage.style.display = 'none';
+    });
 
     // --- ESQUELETO DE INTEGRACIÓN SERVERLESS ---
     // Esta función consume las apuestas. Por ahora lee de localStorage
@@ -315,8 +395,8 @@
       }
     });
 
-    // Cargar datos al iniciar
-    document.addEventListener('DOMContentLoaded', cargarDashboard);
+    // Cargar datos al iniciar (si es admin validado)
+    document.addEventListener('DOMContentLoaded', verificarSesionAdmin);
   </script>
 </body>
 </html>

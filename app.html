@@ -47,71 +47,97 @@
   </div>
 
   <div class="glass-card">
-    <h1 class="title-patriotic">Tu Apuesta</h1>
-    <p class="subtitle">Ingresa tus datos y pronostica el marcador final de hoy.</p>
+    <h1 class="title-patriotic" id="app-title">Tu Apuesta</h1>
+    <p class="subtitle" id="app-subtitle">Ingresa tus datos y pronostica el marcador final de hoy.</p>
     
-    <!-- Tarjeta del Partido -->
-    <div class="match-card">
-      <div class="team">
-        <img src="https://flagcdn.com/w160/co.png" alt="Bandera de Colombia" class="team-flag">
-        <span class="team-name">Colombia</span>
+    <!-- Contenedor del Formulario principal -->
+    <div id="bet-content-container">
+      <!-- Tarjeta del Partido -->
+      <div class="match-card">
+        <div class="team">
+          <img src="https://flagcdn.com/w160/co.png" alt="Bandera de Colombia" class="team-flag">
+          <span class="team-name">Colombia</span>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="team">
+          <img src="https://flagcdn.com/w160/uz.png" alt="Bandera de Uzbekistán" class="team-flag">
+          <span class="team-name">Uzbekistán</span>
+        </div>
       </div>
-      <div class="vs-badge">VS</div>
-      <div class="team">
-        <img src="https://flagcdn.com/w160/uz.png" alt="Bandera de Uzbekistán" class="team-flag">
-        <span class="team-name">Uzbekistán</span>
-      </div>
+
+      <!-- Formulario del Apostador -->
+      <form id="bet-form">
+        <div class="input-group">
+          <label for="fullname" class="input-label">Nombre Completo</label>
+          <input 
+            type="text" 
+            id="fullname" 
+            class="input-field" 
+            placeholder="Escribe tu nombre y apellido" 
+            required
+          >
+        </div>
+
+        <div class="prediction-title">Pronóstico del Marcador</div>
+        <div class="score-container">
+          <div class="team-prediction">
+            <input 
+              type="number" 
+              id="goals-col" 
+              class="input-field score-input" 
+              min="0" 
+              max="20" 
+              placeholder="0" 
+              required
+            >
+            <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles COL</div>
+          </div>
+          
+          <div class="score-divider">:</div>
+          
+          <div class="team-prediction">
+            <input 
+              type="number" 
+              id="goals-uzb" 
+              class="input-field score-input" 
+              min="0" 
+              max="20" 
+              placeholder="0" 
+              required
+            >
+            <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles UZB</div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" id="submit-btn">
+          <span>Enviar Pronóstico</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </form>
     </div>
 
-    <!-- Formulario del Apostador -->
-    <form id="bet-form">
-      <div class="input-group">
-        <label for="fullname" class="input-label">Nombre Completo</label>
-        <input 
-          type="text" 
-          id="fullname" 
-          class="input-field" 
-          placeholder="Escribe tu nombre y apellido" 
-          required
-        >
-      </div>
-
-      <div class="prediction-title">Pronóstico del Marcador</div>
-      <div class="score-container">
-        <div class="team-prediction">
-          <input 
-            type="number" 
-            id="goals-col" 
-            class="input-field score-input" 
-            min="0" 
-            max="20" 
-            placeholder="0" 
-            required
-          >
-          <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles COL</div>
-        </div>
+    <!-- Contenedor del éxito, oculto inicialmente -->
+    <div id="success-card" style="display: none; text-align: center; padding: 1rem 0;">
+      <div style="font-size: 3.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(255, 205, 0, 0.3));">🏆</div>
+      <h2 class="title-patriotic" style="font-size: 1.6rem; margin-bottom: 0.5rem;">¡Pronóstico Registrado!</h2>
+      <p style="color: var(--text-slate); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.4;">
+        Tu apuesta para el partido <strong style="color: var(--col-yellow);">Colombia vs. Uzbekistán</strong> ha sido guardada correctamente en el sistema.
+      </p>
+      
+      <div style="background: rgba(10, 15, 29, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 16px; margin-bottom: 2rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
+        <span style="display:block; font-size:0.75rem; color:var(--text-slate); text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:0.25rem;">Apostador</span>
+        <span id="summary-name" style="display:block; font-size: 1.1rem; font-weight:700; color:var(--text-white);"></span>
         
-        <div class="score-divider">:</div>
+        <div style="width: 40px; height: 1px; background: rgba(255,255,255,0.1); margin: 0.75rem auto;"></div>
         
-        <div class="team-prediction">
-          <input 
-            type="number" 
-            id="goals-uzb" 
-            class="input-field score-input" 
-            min="0" 
-            max="20" 
-            placeholder="0" 
-            required
-          >
-          <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles UZB</div>
-        </div>
+        <span style="display:block; font-size:0.75rem; color:var(--text-slate); text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:0.25rem;">Marcador Apostado</span>
+        <span id="summary-score" style="display:block; font-size:2.2rem; font-weight:800; color:var(--col-yellow); text-shadow: 0 0 10px rgba(255,205,0,0.2);"></span>
       </div>
-
-      <button type="submit" class="btn-primary" id="submit-btn">
-        <span>Enviar Pronóstico</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      
+      <button onclick="window.location.reload()" class="btn-primary" style="margin-top: 0.5rem;">
+        <span>Registrar Otra Apuesta</span>
       </button>
-    </form>
+    </div>
   </div>
 
   <!-- Componente de Notificación -->
@@ -201,19 +227,26 @@
         // Mostrar notificación de éxito
         notification.classList.add('show');
         
+        // Cargar los datos en la tarjeta de resumen
+        document.getElementById('summary-name').innerText = apuestaData.nombre_apostador;
+        document.getElementById('summary-score').innerText = `${golesCol} - ${golesUzb}`;
+
         // Limpiar formulario
         betForm.reset();
 
-        // Ocultar notificación y habilitar botón después de 3 segundos
+        // Transición a pantalla de éxito
         setTimeout(() => {
           notification.classList.remove('show');
           submitBtn.disabled = false;
           submitBtn.style.opacity = '1';
           submitBtn.querySelector('span').innerText = 'Enviar Pronóstico';
           
-          // Redirigir al dashboard para ver los resultados
-          window.location.href = 'dashboard.html';
-        }, 2500);
+          // Ocultar contenido del formulario y mostrar tarjeta de éxito
+          document.getElementById('app-title').style.display = 'none';
+          document.getElementById('app-subtitle').style.display = 'none';
+          document.getElementById('bet-content-container').style.display = 'none';
+          document.getElementById('success-card').style.display = 'block';
+        }, 1500);
 
       } catch (error) {
         console.error(error);
