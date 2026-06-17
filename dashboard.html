@@ -204,6 +204,7 @@
             <th>Marcador Pronosticado</th>
             <th>Ganador</th>
             <th>Fecha de Registro</th>
+            <th data-html2canvas-ignore="true" style="text-align: center;">Acción</th>
           </tr>
         </thead>
         <tbody id="bets-table-body">
@@ -369,7 +370,19 @@
           </td>
           <td><span class="badge-prediction ${badgeClass}">${ganador}</span></td>
           <td style="color: var(--text-slate); font-size: 0.85rem;">${fechaFormateada}</td>
+          <td data-html2canvas-ignore="true" style="text-align: center;">
+            <button class="btn-clear btn-delete-single" style="margin: 0; padding: 0.35rem 0.75rem; font-size: 0.75rem; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 8px; cursor: pointer; font-weight: 600; transition: var(--transition);">
+              🗑️ Borrar
+            </button>
+          </td>
         `;
+
+        // Agregar el listener dinámico para borrar esta apuesta individual
+        const btnDelete = row.querySelector('.btn-delete-single');
+        btnDelete.addEventListener('click', () => {
+          eliminarApuesta(apuesta.fecha_apuesta, apuesta.nombre_apostador);
+        });
+
         tableBody.appendChild(row);
       });
 
@@ -393,13 +406,37 @@
       );
     }
 
-    // Botón para vaciar datos de prueba
+    // Botón para vaciar todos los datos de prueba
     btnClear.addEventListener('click', () => {
       if (confirm('¿Estás seguro de que deseas eliminar todos los registros locales de prueba?')) {
         localStorage.removeItem('apuestas_tricolor');
         cargarDashboard();
       }
     });
+
+    // Función para eliminar una apuesta individual
+    function eliminarApuesta(fechaApuesta, nombre) {
+      if (confirm(`¿Estás seguro de que deseas eliminar la apuesta de "${nombre}"?`)) {
+        // 1. Eliminar localmente (Offline fallback)
+        let apuestas = JSON.parse(localStorage.getItem('apuestas_tricolor') || '[]');
+        apuestas = apuestas.filter(a => a.fecha_apuesta !== fechaApuesta);
+        localStorage.setItem('apuestas_tricolor', JSON.stringify(apuestas));
+
+        // 2. Esqueleto listo para producción BaaS (Supabase / Firebase)
+        /*
+        try {
+          // Supabase:
+          // const { error } = await supabase.from('apuestas').delete().match({ fecha_apuesta: fechaApuesta });
+          // if (error) throw error;
+        } catch (err) {
+          console.error("Error al eliminar registro:", err);
+        }
+        */
+
+        // Recargar el dashboard
+        cargarDashboard();
+      }
+    }
 
     // Botón para exportar PDF en color
     btnDownloadPdf.addEventListener('click', () => {
