@@ -136,6 +136,145 @@
       background: rgba(239, 68, 68, 0.25);
       border-color: rgba(239, 68, 68, 0.4);
     }
+
+    /* Estilos para la sección de resultado oficial y ganadores */
+    .settlement-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 1.5rem;
+    }
+    .settlement-card {
+      background: rgba(10, 15, 29, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 14px;
+      padding: 1.25rem;
+    }
+    .settlement-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--col-yellow);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .official-score-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .official-input-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .official-input {
+      width: 65px;
+      height: 45px;
+      font-size: 1.4rem;
+      text-align: center;
+      font-weight: 700;
+      border-radius: 8px;
+      background: rgba(10, 15, 29, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-white);
+      outline: none;
+      transition: var(--transition);
+    }
+    .official-input:focus {
+      border-color: var(--col-yellow);
+      box-shadow: 0 0 10px rgba(255, 205, 0, 0.15);
+    }
+    .official-input::-webkit-outer-spin-button,
+    .official-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .official-input[type=number] {
+      -moz-appearance: textfield;
+    }
+    .official-label {
+      font-size: 0.7rem;
+      color: var(--text-slate);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .payout-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .payout-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+      padding-bottom: 0.5rem;
+    }
+    .payout-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .payout-lbl {
+      color: var(--text-slate);
+    }
+    .payout-val {
+      font-weight: 700;
+      color: var(--text-white);
+    }
+    .payout-val.highlight {
+      color: var(--col-yellow);
+      font-size: 1.1rem;
+    }
+    .winners-list {
+      max-height: 110px;
+      overflow-y: auto;
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-right: 0.25rem;
+    }
+    .winner-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 205, 0, 0.1);
+      border: 1px solid rgba(255, 205, 0, 0.2);
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--col-yellow);
+    }
+    .no-winners-msg {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .winners-list::-webkit-scrollbar {
+      width: 4px;
+    }
+    .winners-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .winners-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+    }
   </style>
 </head>
 <body>
@@ -198,6 +337,64 @@
       </div>
     </div>
 
+    <!-- Resultado Oficial y Liquidación de Polla -->
+    <div class="settlement-container">
+      <!-- Ingreso del Resultado Oficial -->
+      <div class="settlement-card">
+        <div class="settlement-title">
+          <span>⚽ Resultado Oficial</span>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--text-slate); margin-bottom: 0.75rem; text-align: center;">
+          Ingresa el marcador oficial para calcular los ganadores:
+        </p>
+        <div class="official-score-row">
+          <div class="official-input-group">
+            <span class="official-label">COL</span>
+            <input type="number" id="official-col" class="official-input" min="0" max="20" placeholder="-">
+          </div>
+          <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-slate); margin-top: 1rem;">:</div>
+          <div class="official-input-group">
+            <span class="official-label">UZB</span>
+            <input type="number" id="official-uzb" class="official-input" min="0" max="20" placeholder="-">
+          </div>
+        </div>
+      </div>
+
+      <!-- Liquidación del Premio -->
+      <div class="settlement-card">
+        <div class="settlement-title">
+          <span>💰 Liquidación de Polla</span>
+        </div>
+        <div class="payout-info">
+          <div class="payout-item">
+            <span class="payout-lbl">Pozo Total:</span>
+            <span class="payout-val" id="settle-total-pool">$0 COP</span>
+          </div>
+          <div class="payout-item">
+            <span class="payout-lbl">Ganadores:</span>
+            <span class="payout-val" id="settle-winners-count">0</span>
+          </div>
+          <div class="payout-item">
+            <span class="payout-lbl">Premio por Ganador:</span>
+            <span class="payout-val highlight" id="settle-prize-per-winner">$0 COP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detalle de Ganadores -->
+      <div class="settlement-card" style="display: flex; flex-direction: column;">
+        <div class="settlement-title">
+          <span>🏆 Listado de Ganadores</span>
+        </div>
+        <div id="winners-list-container" class="winners-list">
+          <!-- Dinámico -->
+        </div>
+        <div id="no-winners-msg" class="no-winners-msg">
+          Ingresa el marcador oficial para calcular ganadores.
+        </div>
+      </div>
+    </div>
+
     <!-- Tabla de Pronósticos -->
     <div class="table-container">
       <table>
@@ -249,6 +446,15 @@
     const statTotal = document.getElementById('stat-total');
     const btnClear = document.getElementById('btn-clear');
     const btnDownloadPdf = document.getElementById('btn-download-pdf');
+
+    // Elementos de liquidación oficial
+    const officialColInput = document.getElementById('official-col');
+    const officialUzbInput = document.getElementById('official-uzb');
+    const settleTotalPool = document.getElementById('settle-total-pool');
+    const settleWinnersCount = document.getElementById('settle-winners-count');
+    const settlePrizePerWinner = document.getElementById('settle-prize-per-winner');
+    const winnersListContainer = document.getElementById('winners-list-container');
+    const noWinnersMsg = document.getElementById('no-winners-msg');
 
     // Elementos de validación administrativa
     const adminGateCard = document.getElementById('admin-gate-card');
@@ -325,6 +531,7 @@
     // Renderizar la tabla y calcular las estadísticas
     async function cargarDashboard() {
       const apuestas = await obtenerApuestasDeBaseDeDatos();
+      apuestasCargadas = apuestas;
       
       // Limpiar tabla
       tableBody.innerHTML = '';
@@ -335,6 +542,7 @@
         statUzb.innerText = '0';
         statEmp.innerText = '0';
         statTotal.innerText = '0';
+        liquidarPolla();
         return;
       }
       
@@ -396,7 +604,85 @@
       statUzb.innerText = uzbCount;
       statEmp.innerText = empCount;
       statTotal.innerText = apuestas.length;
+
+      // Calcular la liquidación de la polla
+      liquidarPolla();
     }
+
+    // Lógica para calcular ganadores y liquidar polla
+    let apuestasCargadas = [];
+
+    function liquidarPolla() {
+      const totalBets = apuestasCargadas.length;
+      const totalPool = totalBets * 5000;
+      
+      settleTotalPool.innerText = "$" + totalPool.toLocaleString('es-CO') + " COP";
+      
+      const colVal = officialColInput.value.trim();
+      const uzbVal = officialUzbInput.value.trim();
+      
+      if (colVal === '' || uzbVal === '') {
+        settleWinnersCount.innerText = "0";
+        settlePrizePerWinner.innerText = "$0 COP";
+        noWinnersMsg.innerText = "Ingresa el marcador oficial para calcular ganadores.";
+        noWinnersMsg.style.display = 'block';
+        winnersListContainer.style.display = 'none';
+        winnersListContainer.innerHTML = '';
+        return;
+      }
+      
+      const officialCol = parseInt(colVal);
+      const officialUzb = parseInt(uzbVal);
+      
+      if (isNaN(officialCol) || isNaN(officialUzb) || officialCol < 0 || officialUzb < 0) {
+        settleWinnersCount.innerText = "0";
+        settlePrizePerWinner.innerText = "$0 COP";
+        noWinnersMsg.innerText = "Ingresa valores numéricos válidos.";
+        noWinnersMsg.style.display = 'block';
+        winnersListContainer.style.display = 'none';
+        winnersListContainer.innerHTML = '';
+        return;
+      }
+      
+      const winners = apuestasCargadas.filter(apuesta => 
+        apuesta.pronostico.goles_colombia === officialCol && 
+        apuesta.pronostico.goles_uzbekistan === officialUzb
+      );
+      
+      settleWinnersCount.innerText = winners.length;
+      
+      if (winners.length > 0) {
+        const prizePerWinner = Math.floor(totalPool / winners.length);
+        settlePrizePerWinner.innerText = "$" + prizePerWinner.toLocaleString('es-CO') + " COP";
+        noWinnersMsg.style.display = 'none';
+        
+        // Renderizar ganadores
+        winnersListContainer.innerHTML = '';
+        winners.forEach(winner => {
+          const badge = document.createElement('div');
+          badge.className = 'winner-badge';
+          badge.innerHTML = `🏆 <span style="margin-left: 5px;">${escapeHTML(winner.nombre_apostador)}</span>`;
+          winnersListContainer.appendChild(badge);
+        });
+        winnersListContainer.style.display = 'flex';
+      } else {
+        settlePrizePerWinner.innerText = "$0 COP (Se acumula)";
+        noWinnersMsg.innerText = "No hubo ganadores. El pozo se acumula.";
+        noWinnersMsg.style.display = 'block';
+        winnersListContainer.style.display = 'none';
+        winnersListContainer.innerHTML = '';
+      }
+    }
+
+    // Vincular inputs al recálculo automático y sincronizar el atributo para el PDF
+    officialColInput.addEventListener('input', (e) => {
+      officialColInput.setAttribute('value', e.target.value);
+      liquidarPolla();
+    });
+    officialUzbInput.addEventListener('input', (e) => {
+      officialUzbInput.setAttribute('value', e.target.value);
+      liquidarPolla();
+    });
 
     // Función de saneamiento contra inyección HTML
     function escapeHTML(str) {
