@@ -6,6 +6,8 @@
   <title>Dashboard de Apuestas - Polla Tricolor</title>
   <link rel="stylesheet" href="css/style.css">
   <meta name="description" content="Resultados en tiempo real de los apostadores y sus pronósticos para Colombia vs. Uzbekistán.">
+  <!-- html2pdf.js CDN para exportar reportes en PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     /* Estilos del Dashboard */
     .glass-card-wide {
@@ -213,8 +215,11 @@
       </div>
     </div>
 
-    <div style="text-align: right;">
-      <button id="btn-clear" class="btn-clear">Reiniciar Base de Datos</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+      <button id="btn-download-pdf" class="btn-primary" style="width: auto; padding: 0.6rem 1.5rem; font-size: 0.85rem; margin: 0;" data-html2canvas-ignore="true">
+        <span>📥 Descargar Reporte PDF</span>
+      </button>
+      <button id="btn-clear" class="btn-clear" style="margin: 0;" data-html2canvas-ignore="true">Reiniciar Base de Datos</button>
     </div>
   </div>
 
@@ -231,6 +236,7 @@
     const statEmp = document.getElementById('stat-emp');
     const statTotal = document.getElementById('stat-total');
     const btnClear = document.getElementById('btn-clear');
+    const btnDownloadPdf = document.getElementById('btn-download-pdf');
 
     // Elementos de validación administrativa
     const adminGateCard = document.getElementById('admin-gate-card');
@@ -393,6 +399,50 @@
         localStorage.removeItem('apuestas_tricolor');
         cargarDashboard();
       }
+    });
+
+    // Botón para exportar PDF en color
+    btnDownloadPdf.addEventListener('click', () => {
+      const element = document.getElementById('admin-dashboard-content');
+      
+      // Configuración de html2pdf
+      const opt = {
+        margin:       [10, 10, 15, 10],
+        filename:     'Reporte_Polla_Colombia_Uzbekistan.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { 
+          scale: 2, 
+          useCORS: true, 
+          backgroundColor: '#0a0f1d',
+          scrollY: 0
+        },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Guardar ancho original
+      const originalMaxWidth = element.style.maxWidth;
+      element.style.maxWidth = '800px';
+
+      btnDownloadPdf.querySelector('span').innerText = 'Generando PDF...';
+      btnDownloadPdf.disabled = true;
+
+      // Ejecutar la exportación
+      html2pdf()
+        .set(opt)
+        .from(element)
+        .save()
+        .then(() => {
+          element.style.maxWidth = originalMaxWidth;
+          btnDownloadPdf.querySelector('span').innerText = '📥 Descargar Reporte PDF';
+          btnDownloadPdf.disabled = false;
+        })
+        .catch(err => {
+          console.error("Error al generar PDF:", err);
+          alert("Ocurrió un error al generar el PDF.");
+          element.style.maxWidth = originalMaxWidth;
+          btnDownloadPdf.querySelector('span').innerText = '📥 Descargar Reporte PDF';
+          btnDownloadPdf.disabled = false;
+        });
     });
 
     // Cargar datos al iniciar (si es admin validado)
