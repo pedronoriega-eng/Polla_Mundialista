@@ -342,3 +342,134 @@ body::before {
 .notification.show {
   transform: translateY(0);
 }
+
+/* ==========================================
+   ESTILOS PREMIUM PANTALLA DE INGRESO (LIGHT THEME TRICOLOR)
+   ========================================== */
+
+/* Fondo claro y degradados sutiles con colores patrios (Amarillo, Azul, Rojo) */
+body.login-page {
+  background-color: #f3f4f6;
+  color: #1e293b;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(255, 205, 0, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(0, 48, 135, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(200, 16, 46, 0.08) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+/* Decoración superior con franjas tricolor definidas en el body */
+body.login-page::before {
+  height: 6px;
+  background: linear-gradient(to right, 
+    #FFCD00 0%, #FFCD00 50%, 
+    #003087 50%, #003087 75%, 
+    #C8102E 75%, #C8102E 100%
+  );
+}
+
+/* Tarjeta de Login (Glassmorphism sobre fondo claro) */
+body.login-page .glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 20px 40px -15px rgba(15, 23, 42, 0.1),
+    0 0 40px -5px rgba(255, 205, 0, 0.2);
+  color: #1e293b;
+}
+
+/* Efecto brillo al pasar por la tarjeta */
+body.login-page .glass-card::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+}
+
+/* Línea decorativa tricolor integrada en la parte superior de la tarjeta */
+body.login-page .glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, 
+    var(--col-yellow) 0%, var(--col-yellow) 50%, 
+    var(--col-blue) 50%, var(--col-blue) 75%, 
+    var(--col-red) 75%, var(--col-red) 100%
+  );
+  z-index: 5;
+}
+
+/* Título patriótico con degradado en los colores de la bandera */
+body.login-page .title-patriotic {
+  background: linear-gradient(135deg, #FFCD00 0%, #003087 55%, #C8102E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+/* Subtítulo */
+body.login-page .subtitle {
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Contenedor de la bandera en el login */
+body.login-page .flag-container {
+  border: 3px solid #FFCD00;
+  box-shadow: 0 4px 15px rgba(255, 205, 0, 0.3);
+  background-color: #fff;
+}
+
+/* Campo de entrada */
+body.login-page .input-label {
+  color: #475569;
+  font-weight: 700;
+}
+
+body.login-page .input-field {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+}
+
+body.login-page .input-field::placeholder {
+  color: #94a3b8;
+}
+
+body.login-page .input-field:focus {
+  border-color: #003087;
+  box-shadow: 0 0 0 3px rgba(0, 48, 135, 0.15);
+  background: #ffffff;
+}
+
+body.login-page .input-field.error-border {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+/* Botón de Ingreso */
+body.login-page .btn-primary {
+  background: linear-gradient(135deg, #FFCD00 0%, #E6B800 100%);
+  color: #0b1329;
+  border: none;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(255, 205, 0, 0.4);
+}
+
+body.login-page .btn-primary:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #FFE066 0%, #FFCD00 100%);
+  box-shadow: 0 8px 20px rgba(255, 205, 0, 0.5);
+}
+
+body.login-page .btn-primary svg {
+  stroke: #0b1329;
+}
+

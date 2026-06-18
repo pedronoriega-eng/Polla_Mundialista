@@ -1,4 +1,4 @@
-# Memoria del Proyecto - Sistema de Apuestas (Quiniela) Colombia vs. Uzbekistán
+# Memoria del Proyecto - Sistema de Apuestas (Quiniela) Colombia vs. República del Congo
 
 Este documento registra las especificaciones de diseño, estructura de datos y arquitectura para la aplicación web de apuestas deportivas.
 
@@ -30,18 +30,18 @@ La aplicación utiliza un servicio backend Serverless (Supabase o Firebase) para
           "minimum": 0,
           "description": "Goles pronosticados para Colombia"
         },
-        "goles_uzbekistan": {
+        "goles_congo": {
           "type": "integer",
           "minimum": 0,
-          "description": "Goles pronosticados para Uzbekistán"
+          "description": "Goles pronosticados para República del Congo"
         },
         "ganador": {
           "type": "string",
-          "enum": ["Colombia", "Uzbekistán", "Empate"],
+          "enum": ["Colombia", "República del Congo", "Empate"],
           "description": "Cálculo directo del equipo ganador según los goles."
         }
       },
-      "required": ["goles_colombia", "goles_uzbekistan", "ganador"]
+      "required": ["goles_colombia", "goles_congo", "ganador"]
     },
     "fecha_apuesta": {
       "type": "string",
@@ -61,10 +61,10 @@ La aplicación utiliza un servicio backend Serverless (Supabase o Firebase) para
   "nombre_apostador": "Pedro Pérez",
   "pronostico": {
     "goles_colombia": 3,
-    "goles_uzbekistan": 1,
+    "goles_congo": 1,
     "ganador": "Colombia"
   },
-  "fecha_apuesta": "2026-06-17T08:05:00-05:00"
+  "fecha_apuesta": "2026-06-18T08:05:00-05:00"
 }
 ```
 
@@ -73,9 +73,10 @@ La aplicación utiliza un servicio backend Serverless (Supabase o Firebase) para
 ```
 sistema-apuestas/
 ├── PROJECT_MEMORY.md       # Memoria técnica y especificación del JSON
-├── login.html              # Gate de pago (Acceso con contraseña Mundial_123)
+├── index.html              # Gate de pago e ingreso (Acceso con contraseña Col_123)
 ├── app.html                # Formulario principal de apuesta (Tarjeta de partido)
-├── dashboard.html          # Visualización de apuestas (Dashboard administrativo)
+├── dashboard.html          # Visualización de apuestas y liquidación (Contraseña Pnoriega_123)
 └── css/
     └── style.css           # Estilos patrios unificados (Colombia Theme)
 ```
+

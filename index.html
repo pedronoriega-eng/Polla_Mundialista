@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Acceso Tricolor - Polla Deportiva</title>
   <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="Accede a la polla oficial de la Selección Colombia para el partido frente a Uzbekistán.">
+  <meta name="description" content="Accede a la polla oficial de la Selección Colombia para el partido frente a República del Congo.">
 </head>
-<body>
+<body class="login-page">
   <div class="glass-card">
     <div class="flag-container">
       <!-- Bandera de Colombia provista por flagcdn -->
@@ -51,8 +51,8 @@
       
       const enteredPassword = passwordInput.value.trim();
       
-      // Contraseña requerida: Mundial_123
-      if (enteredPassword === 'Mundial_123') {
+      // Contraseña requerida: Col_123
+      if (enteredPassword === 'Col_123') {
         sessionStorage.setItem('authorized', 'true');
         errorMessage.style.display = 'none';
         

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard de Apuestas - Polla Tricolor</title>
   <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="Resultados en tiempo real de los apostadores y sus pronósticos para Colombia vs. Uzbekistán.">
+  <meta name="description" content="Resultados en tiempo real de los apostadores y sus pronósticos para Colombia vs. República del Congo.">
   <!-- html2pdf.js CDN para exportar reportes en PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <!-- Supabase CDN y configuración -->
@@ -109,7 +109,7 @@
     }
 
     .badge-colombia { background: rgba(255, 205, 0, 0.15); color: var(--col-yellow); border: 1px solid rgba(255, 205, 0, 0.3); }
-    .badge-uzbekistan { background: rgba(0, 48, 135, 0.25); color: #60a5fa; border: 1px solid rgba(0, 48, 135, 0.5); }
+    .badge-congo { background: rgba(0, 48, 135, 0.25); color: #60a5fa; border: 1px solid rgba(0, 48, 135, 0.5); }
     .badge-empate { background: rgba(200, 16, 46, 0.15); color: #f87171; border: 1px solid rgba(200, 16, 46, 0.3); }
 
     .empty-state {
@@ -238,8 +238,6 @@
       font-size: 1.1rem;
     }
     .winners-list {
-      max-height: 110px;
-      overflow-y: auto;
       margin-top: 0.5rem;
       display: flex;
       flex-direction: column;
@@ -324,8 +322,8 @@
         <div class="stat-val" id="stat-col">0</div>
       </div>
       <div class="stat-card red-border">
-        <div class="stat-lbl">Uzbekistán</div>
-        <div class="stat-val" id="stat-uzb">0</div>
+        <div class="stat-lbl">República del Congo</div>
+        <div class="stat-val" id="stat-cgo">0</div>
       </div>
       <div class="stat-card blue-border">
         <div class="stat-lbl">Empates</div>
@@ -354,8 +352,8 @@
           </div>
           <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-slate); margin-top: 1rem;">:</div>
           <div class="official-input-group">
-            <span class="official-label">UZB</span>
-            <input type="number" id="official-uzb" class="official-input" min="0" max="20" placeholder="-">
+            <span class="official-label">CONGO</span>
+            <input type="number" id="official-cgo" class="official-input" min="0" max="20" placeholder="-">
           </div>
         </div>
       </div>
@@ -441,7 +439,7 @@
     const tableBody = document.getElementById('bets-table-body');
     const emptyState = document.getElementById('empty-state-container');
     const statCol = document.getElementById('stat-col');
-    const statUzb = document.getElementById('stat-uzb');
+    const statCgo = document.getElementById('stat-cgo');
     const statEmp = document.getElementById('stat-emp');
     const statTotal = document.getElementById('stat-total');
     const btnClear = document.getElementById('btn-clear');
@@ -449,7 +447,7 @@
 
     // Elementos de liquidación oficial
     const officialColInput = document.getElementById('official-col');
-    const officialUzbInput = document.getElementById('official-uzb');
+    const officialCgoInput = document.getElementById('official-cgo');
     const settleTotalPool = document.getElementById('settle-total-pool');
     const settleWinnersCount = document.getElementById('settle-winners-count');
     const settlePrizePerWinner = document.getElementById('settle-prize-per-winner');
@@ -529,9 +527,16 @@
     }
 
     // Renderizar la tabla y calcular las estadísticas
+    let apuestasCargadas = [];
+
     async function cargarDashboard() {
       const apuestas = await obtenerApuestasDeBaseDeDatos();
       apuestasCargadas = apuestas;
+      renderizarDashboard();
+    }
+
+    function renderizarDashboard() {
+      const apuestas = apuestasCargadas;
       
       // Limpiar tabla
       tableBody.innerHTML = '';
@@ -539,7 +544,7 @@
       if (apuestas.length === 0) {
         emptyState.style.display = 'block';
         statCol.innerText = '0';
-        statUzb.innerText = '0';
+        statCgo.innerText = '0';
         statEmp.innerText = '0';
         statTotal.innerText = '0';
         liquidarPolla();
@@ -549,18 +554,48 @@
       emptyState.style.display = 'none';
       
       let colCount = 0;
-      let uzbCount = 0;
+      let cgoCount = 0;
       let empCount = 0;
+
+      // Obtener marcador oficial si existe
+      const colVal = officialColInput.value.trim();
+      const cgoVal = officialCgoInput.value.trim();
+      const hasOfficialScore = colVal !== '' && cgoVal !== '';
+      const officialCol = hasOfficialScore ? parseInt(colVal) : null;
+      const officialCgo = hasOfficialScore ? parseInt(cgoVal) : null;
+
+      // Calcular pozo total
+      const totalBets = apuestas.length;
+      const totalPool = totalBets * 5000;
+
+      // Contar ganadores
+      let winnersCount = 0;
+      if (hasOfficialScore && !isNaN(officialCol) && !isNaN(officialCgo)) {
+        winnersCount = apuestas.filter(a => 
+          a.pronostico.goles_colombia === officialCol && 
+          a.pronostico.goles_congo === officialCgo
+        ).length;
+      }
+      const prizePerWinner = winnersCount > 0 ? Math.floor(totalPool / winnersCount) : 0;
 
       apuestas.forEach(apuesta => {
         // Contabilizar estadísticas
         const ganador = apuesta.pronostico.ganador;
         if (ganador === 'Colombia') colCount++;
-        else if (ganador === 'Uzbekistán') uzbCount++;
+        else if (ganador === 'República del Congo') cgoCount++;
         else empCount++;
+
+        // Verificar si es ganador
+        const isWinner = hasOfficialScore && 
+                         apuesta.pronostico.goles_colombia === officialCol && 
+                         apuesta.pronostico.goles_congo === officialCgo;
 
         // Crear fila de tabla
         const row = document.createElement('tr');
+        if (isWinner) {
+          row.style.background = 'rgba(255, 205, 0, 0.08)';
+          row.style.borderLeft = '3px solid var(--col-yellow)';
+        }
         
         // Formatear Fecha
         const fechaObj = new Date(apuesta.fecha_apuesta);
@@ -574,12 +609,16 @@
         // Seleccionar clase de badge según ganador
         let badgeClass = 'badge-empate';
         if (ganador === 'Colombia') badgeClass = 'badge-colombia';
-        if (ganador === 'Uzbekistán') badgeClass = 'badge-uzbekistan';
+        if (ganador === 'República del Congo') badgeClass = 'badge-congo';
 
         row.innerHTML = `
-          <td style="font-weight: 600;">${escapeHTML(apuesta.nombre_apostador)}</td>
+          <td style="font-weight: 600;">
+            ${escapeHTML(apuesta.nombre_apostador)}
+            ${isWinner ? `<span style="display:inline-block; margin-left: 5px; font-size: 0.75rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 700;">¡GANADOR!</span>` : ''}
+          </td>
           <td style="font-size: 1.1rem; font-weight: 700; color: var(--col-yellow);">
-            ${apuesta.pronostico.goles_colombia} - ${apuesta.pronostico.goles_uzbekistan}
+            ${apuesta.pronostico.goles_colombia} - ${apuesta.pronostico.goles_congo}
+            ${isWinner ? `<div style="font-size: 0.75rem; color: #10b981; font-weight: 700; margin-top: 0.25rem;">+$${prizePerWinner.toLocaleString('es-CO')} COP</div>` : ''}
           </td>
           <td><span class="badge-prediction ${badgeClass}">${ganador}</span></td>
           <td style="color: var(--text-slate); font-size: 0.85rem;">${fechaFormateada}</td>
@@ -601,16 +640,13 @@
 
       // Actualizar contadores
       statCol.innerText = colCount;
-      statUzb.innerText = uzbCount;
+      statCgo.innerText = cgoCount;
       statEmp.innerText = empCount;
       statTotal.innerText = apuestas.length;
 
       // Calcular la liquidación de la polla
       liquidarPolla();
     }
-
-    // Lógica para calcular ganadores y liquidar polla
-    let apuestasCargadas = [];
 
     function liquidarPolla() {
       const totalBets = apuestasCargadas.length;
@@ -619,9 +655,9 @@
       settleTotalPool.innerText = "$" + totalPool.toLocaleString('es-CO') + " COP";
       
       const colVal = officialColInput.value.trim();
-      const uzbVal = officialUzbInput.value.trim();
+      const cgoVal = officialCgoInput.value.trim();
       
-      if (colVal === '' || uzbVal === '') {
+      if (colVal === '' || cgoVal === '') {
         settleWinnersCount.innerText = "0";
         settlePrizePerWinner.innerText = "$0 COP";
         noWinnersMsg.innerText = "Ingresa el marcador oficial para calcular ganadores.";
@@ -632,9 +668,9 @@
       }
       
       const officialCol = parseInt(colVal);
-      const officialUzb = parseInt(uzbVal);
+      const officialCgo = parseInt(cgoVal);
       
-      if (isNaN(officialCol) || isNaN(officialUzb) || officialCol < 0 || officialUzb < 0) {
+      if (isNaN(officialCol) || isNaN(officialCgo) || officialCol < 0 || officialCgo < 0) {
         settleWinnersCount.innerText = "0";
         settlePrizePerWinner.innerText = "$0 COP";
         noWinnersMsg.innerText = "Ingresa valores numéricos válidos.";
@@ -646,7 +682,7 @@
       
       const winners = apuestasCargadas.filter(apuesta => 
         apuesta.pronostico.goles_colombia === officialCol && 
-        apuesta.pronostico.goles_uzbekistan === officialUzb
+        apuesta.pronostico.goles_congo === officialCgo
       );
       
       settleWinnersCount.innerText = winners.length;
@@ -661,7 +697,15 @@
         winners.forEach(winner => {
           const badge = document.createElement('div');
           badge.className = 'winner-badge';
-          badge.innerHTML = `🏆 <span style="margin-left: 5px;">${escapeHTML(winner.nombre_apostador)}</span>`;
+          badge.style.display = 'flex';
+          badge.style.justifyContent = 'space-between';
+          badge.style.alignItems = 'center';
+          badge.style.width = '100%';
+          badge.style.padding = '0.5rem 0.75rem';
+          badge.innerHTML = `
+            <span>🏆 ${escapeHTML(winner.nombre_apostador)}</span>
+            <span style="font-weight: 800; font-size: 0.9rem; color: var(--col-yellow);">$${prizePerWinner.toLocaleString('es-CO')} COP</span>
+          `;
           winnersListContainer.appendChild(badge);
         });
         winnersListContainer.style.display = 'flex';
@@ -677,11 +721,11 @@
     // Vincular inputs al recálculo automático y sincronizar el atributo para el PDF
     officialColInput.addEventListener('input', (e) => {
       officialColInput.setAttribute('value', e.target.value);
-      liquidarPolla();
+      renderizarDashboard();
     });
-    officialUzbInput.addEventListener('input', (e) => {
-      officialUzbInput.setAttribute('value', e.target.value);
-      liquidarPolla();
+    officialCgoInput.addEventListener('input', (e) => {
+      officialCgoInput.setAttribute('value', e.target.value);
+      renderizarDashboard();
     });
 
     // Función de saneamiento contra inyección HTML
@@ -747,11 +791,12 @@
     // Botón para exportar PDF en color
     btnDownloadPdf.addEventListener('click', () => {
       const element = document.getElementById('admin-dashboard-content');
+      const tableContainer = document.querySelector('.table-container');
       
       // Configuración de html2pdf
       const opt = {
         margin:       [10, 10, 15, 10],
-        filename:     'Reporte_Polla_Colombia_Uzbekistan.pdf',
+        filename:     'Reporte_Polla_Colombia_Congo.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { 
           scale: 2, 
@@ -762,9 +807,11 @@
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      // Guardar ancho original
+      // Guardar ancho original y overflow
       const originalMaxWidth = element.style.maxWidth;
       element.style.maxWidth = '800px';
+      const originalOverflow = tableContainer.style.overflowX;
+      tableContainer.style.overflowX = 'visible';
 
       btnDownloadPdf.querySelector('span').innerText = 'Generando PDF...';
       btnDownloadPdf.disabled = true;
@@ -776,6 +823,7 @@
         .save()
         .then(() => {
           element.style.maxWidth = originalMaxWidth;
+          tableContainer.style.overflowX = originalOverflow;
           btnDownloadPdf.querySelector('span').innerText = '📥 Descargar Reporte PDF';
           btnDownloadPdf.disabled = false;
         })
@@ -783,6 +831,7 @@
           console.error("Error al generar PDF:", err);
           alert("Ocurrió un error al generar el PDF.");
           element.style.maxWidth = originalMaxWidth;
+          tableContainer.style.overflowX = originalOverflow;
           btnDownloadPdf.querySelector('span').innerText = '📥 Descargar Reporte PDF';
           btnDownloadPdf.disabled = false;
         });
