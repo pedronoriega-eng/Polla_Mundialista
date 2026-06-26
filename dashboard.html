@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard de Apuestas - Polla Tricolor</title>
   <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="Resultados en tiempo real de los apostadores y sus pronósticos para Colombia vs. República del Congo.">
+  <meta name="description" content="Resultados en tiempo real de los apostadores y sus pronósticos para Colombia vs. Portugal.">
   <!-- html2pdf.js CDN para exportar reportes en PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <!-- Supabase CDN y configuración -->
@@ -99,6 +99,8 @@
       background: rgba(255, 255, 255, 0.02);
     }
 
+    .stat-card.green-border { border-bottom: 3px solid var(--portugal-green); }
+
     .badge-prediction {
       display: inline-block;
       padding: 0.25rem 0.75rem;
@@ -109,7 +111,7 @@
     }
 
     .badge-colombia { background: rgba(255, 205, 0, 0.15); color: var(--col-yellow); border: 1px solid rgba(255, 205, 0, 0.3); }
-    .badge-congo { background: rgba(0, 48, 135, 0.25); color: #60a5fa; border: 1px solid rgba(0, 48, 135, 0.5); }
+    .badge-portugal { background: rgba(4, 106, 56, 0.15); color: #10b981; border: 1px solid rgba(4, 106, 56, 0.3); }
     .badge-empate { background: rgba(200, 16, 46, 0.15); color: #f87171; border: 1px solid rgba(200, 16, 46, 0.3); }
 
     .empty-state {
@@ -284,8 +286,16 @@
 
   <!-- Formulario de Validación de Admin -->
   <div class="glass-card" id="admin-gate-card" style="margin: 2rem auto; transition: var(--transition);">
-    <div class="flag-container">
-      <img src="https://flagcdn.com/w160/co.png" alt="Bandera de Colombia" class="flag-img">
+    <div class="flags-wrapper">
+      <!-- Bandera de Colombia provista por flagcdn -->
+      <div class="flag-container">
+        <img src="https://flagcdn.com/w160/co.png" alt="Bandera de Colombia" class="flag-img">
+      </div>
+      <div class="flag-vs">VS</div>
+      <!-- Bandera de Portugal provista por flagcdn -->
+      <div class="flag-container">
+        <img src="https://flagcdn.com/w160/pt.png" alt="Bandera de Portugal" class="flag-img">
+      </div>
     </div>
     <h1 class="title-patriotic">Acceso Admin</h1>
     <p class="subtitle">Solo el administrador de la página puede ver los resultados consolidados. Ingresa la contraseña.</p>
@@ -321,8 +331,8 @@
         <div class="stat-lbl">Fe en Colombia</div>
         <div class="stat-val" id="stat-col">0</div>
       </div>
-      <div class="stat-card red-border">
-        <div class="stat-lbl">República del Congo</div>
+      <div class="stat-card green-border">
+        <div class="stat-lbl">Portugal</div>
         <div class="stat-val" id="stat-cgo">0</div>
       </div>
       <div class="stat-card blue-border">
@@ -352,7 +362,7 @@
           </div>
           <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-slate); margin-top: 1rem;">:</div>
           <div class="official-input-group">
-            <span class="official-label">CONGO</span>
+            <span class="official-label">PORTUGAL</span>
             <input type="number" id="official-cgo" class="official-input" min="0" max="20" placeholder="-">
           </div>
         </div>
@@ -571,10 +581,10 @@
       // Contar ganadores
       let winnersCount = 0;
       if (hasOfficialScore && !isNaN(officialCol) && !isNaN(officialCgo)) {
-        winnersCount = apuestas.filter(a => 
-          a.pronostico.goles_colombia === officialCol && 
-          a.pronostico.goles_congo === officialCgo
-        ).length;
+        winnersCount = apuestas.filter(a => {
+          const opponentGoals = typeof a.pronostico.goles_portugal !== 'undefined' ? a.pronostico.goles_portugal : (a.pronostico.goles_congo || 0);
+          return a.pronostico.goles_colombia === officialCol && opponentGoals === officialCgo;
+        }).length;
       }
       const prizePerWinner = winnersCount > 0 ? Math.floor(totalPool / winnersCount) : 0;
 
@@ -582,13 +592,16 @@
         // Contabilizar estadísticas
         const ganador = apuesta.pronostico.ganador;
         if (ganador === 'Colombia') colCount++;
-        else if (ganador === 'República del Congo') cgoCount++;
+        else if (ganador === 'Portugal' || ganador === 'República del Congo') cgoCount++;
         else empCount++;
+
+        // Extraer goles del oponente
+        const opponentGoals = typeof apuesta.pronostico.goles_portugal !== 'undefined' ? apuesta.pronostico.goles_portugal : (apuesta.pronostico.goles_congo || 0);
 
         // Verificar si es ganador
         const isWinner = hasOfficialScore && 
                          apuesta.pronostico.goles_colombia === officialCol && 
-                         apuesta.pronostico.goles_congo === officialCgo;
+                         opponentGoals === officialCgo;
 
         // Crear fila de tabla
         const row = document.createElement('tr');
@@ -609,7 +622,10 @@
         // Seleccionar clase de badge según ganador
         let badgeClass = 'badge-empate';
         if (ganador === 'Colombia') badgeClass = 'badge-colombia';
-        if (ganador === 'República del Congo') badgeClass = 'badge-congo';
+        if (ganador === 'Portugal' || ganador === 'República del Congo') badgeClass = 'badge-portugal';
+
+        // Mostrar el nombre actual del rival en el badge si era Congo
+        const displayGanador = (ganador === 'República del Congo') ? 'Portugal' : ganador;
 
         row.innerHTML = `
           <td style="font-weight: 600;">
@@ -617,10 +633,10 @@
             ${isWinner ? `<span style="display:inline-block; margin-left: 5px; font-size: 0.75rem; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 700;">¡GANADOR!</span>` : ''}
           </td>
           <td style="font-size: 1.1rem; font-weight: 700; color: var(--col-yellow);">
-            ${apuesta.pronostico.goles_colombia} - ${apuesta.pronostico.goles_congo}
+            ${apuesta.pronostico.goles_colombia} - ${opponentGoals}
             ${isWinner ? `<div style="font-size: 0.75rem; color: #10b981; font-weight: 700; margin-top: 0.25rem;">+$${prizePerWinner.toLocaleString('es-CO')} COP</div>` : ''}
           </td>
-          <td><span class="badge-prediction ${badgeClass}">${ganador}</span></td>
+          <td><span class="badge-prediction ${badgeClass}">${displayGanador}</span></td>
           <td style="color: var(--text-slate); font-size: 0.85rem;">${fechaFormateada}</td>
           <td data-html2canvas-ignore="true" style="text-align: center;">
             <button class="btn-clear btn-delete-single" style="margin: 0; padding: 0.35rem 0.75rem; font-size: 0.75rem; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 8px; cursor: pointer; font-weight: 600; transition: var(--transition);">
@@ -680,10 +696,10 @@
         return;
       }
       
-      const winners = apuestasCargadas.filter(apuesta => 
-        apuesta.pronostico.goles_colombia === officialCol && 
-        apuesta.pronostico.goles_congo === officialCgo
-      );
+      const winners = apuestasCargadas.filter(apuesta => {
+        const opponentGoals = typeof apuesta.pronostico.goles_portugal !== 'undefined' ? apuesta.pronostico.goles_portugal : (apuesta.pronostico.goles_congo || 0);
+        return apuesta.pronostico.goles_colombia === officialCol && opponentGoals === officialCgo;
+      });
       
       settleWinnersCount.innerText = winners.length;
       
@@ -796,7 +812,7 @@
       // Configuración de html2pdf
       const opt = {
         margin:       [10, 10, 15, 10],
-        filename:     'Reporte_Polla_Colombia_Congo.pdf',
+        filename:     'Reporte_Polla_Colombia_Portugal.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { 
           scale: 2, 

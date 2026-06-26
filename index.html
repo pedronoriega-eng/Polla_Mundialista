@@ -5,13 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Acceso Tricolor - Polla Deportiva</title>
   <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="Accede a la polla oficial de la Selección Colombia para el partido frente a República del Congo.">
+  <meta name="description" content="Accede a la polla oficial de la Selección Colombia para el partido frente a Portugal.">
 </head>
 <body class="login-page">
   <div class="glass-card">
-    <div class="flag-container">
+    <div class="flags-wrapper">
       <!-- Bandera de Colombia provista por flagcdn -->
-      <img src="https://flagcdn.com/w160/co.png" alt="Bandera de Colombia" class="flag-img">
+      <div class="flag-container">
+        <img src="https://flagcdn.com/w160/co.png" alt="Bandera de Colombia" class="flag-img">
+      </div>
+      <div class="flag-vs">VS</div>
+      <!-- Bandera de Portugal provista por flagcdn -->
+      <div class="flag-container">
+        <img src="https://flagcdn.com/w160/pt.png" alt="Bandera de Portugal" class="flag-img">
+      </div>
     </div>
     
     <h1 class="title-patriotic">Polla Tricolor</h1>
@@ -51,8 +58,8 @@
       
       const enteredPassword = passwordInput.value.trim();
       
-      // Contraseña requerida: Col_123
-      if (enteredPassword === 'Col_123') {
+      // Contraseña requerida: Apuesta_123
+      if (enteredPassword === 'Apuesta_123') {
         sessionStorage.setItem('authorized', 'true');
         errorMessage.style.display = 'none';
         

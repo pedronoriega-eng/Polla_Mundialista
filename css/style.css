@@ -10,6 +10,12 @@
   --col-blue: #003087;
   --col-red: #C8102E;
   
+  /* Paleta de Portugal */
+  --portugal-green: #046A38;
+  --portugal-red: #DA291C;
+  --portugal-green-glow: rgba(4, 106, 56, 0.2);
+  --portugal-red-glow: rgba(218, 41, 28, 0.2);
+  
   /* Variantes translúcidas y glows */
   --yellow-glow: rgba(255, 205, 0, 0.2);
   --yellow-light: rgba(255, 205, 0, 0.1);
@@ -195,7 +201,7 @@ body::before {
   75% { transform: translateX(6px); }
 }
 
-/* Bandera de Colombia circular */
+/* Banderas circulares */
 .flag-container {
   width: 64px;
   height: 64px;
@@ -207,6 +213,29 @@ body::before {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Contenedor de doble bandera */
+.flags-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 auto 1.5rem auto;
+}
+
+.flags-wrapper .flag-container {
+  margin: 0;
+}
+
+.flag-vs {
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .flag-img {
@@ -347,24 +376,28 @@ body::before {
    ESTILOS PREMIUM PANTALLA DE INGRESO (LIGHT THEME TRICOLOR)
    ========================================== */
 
-/* Fondo claro y degradados sutiles con colores patrios (Amarillo, Azul, Rojo) */
+/* Fondo claro y degradados sutiles con colores de Colombia y Portugal */
 body.login-page {
   background-color: #f3f4f6;
   color: #1e293b;
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(255, 205, 0, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 90% 10%, rgba(0, 48, 135, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 50% 90%, rgba(200, 16, 46, 0.08) 0%, transparent 50%);
+    radial-gradient(circle at 10% 20%, rgba(255, 205, 0, 0.14) 0%, transparent 40%),
+    radial-gradient(circle at 10% 60%, rgba(0, 48, 135, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 20% 90%, rgba(200, 16, 46, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 90% 20%, rgba(4, 106, 56, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(218, 41, 28, 0.08) 0%, transparent 45%);
   background-attachment: fixed;
 }
 
-/* Decoración superior con franjas tricolor definidas en el body */
+/* Decoración superior con franjas combinadas de Colombia (50%) y Portugal (50%) */
 body.login-page::before {
   height: 6px;
   background: linear-gradient(to right, 
-    #FFCD00 0%, #FFCD00 50%, 
-    #003087 50%, #003087 75%, 
-    #C8102E 75%, #C8102E 100%
+    #FFCD00 0%, #FFCD00 25%, 
+    #003087 25%, #003087 37.5%, 
+    #C8102E 37.5%, #C8102E 50%,
+    #046A38 50%, #046A38 70%,
+    #DA291C 70%, #DA291C 100%
   );
 }
 
@@ -374,7 +407,7 @@ body.login-page .glass-card {
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: 
     0 20px 40px -15px rgba(15, 23, 42, 0.1),
-    0 0 40px -5px rgba(255, 205, 0, 0.2);
+    0 0 40px -5px rgba(255, 205, 0, 0.15);
   color: #1e293b;
 }
 
@@ -388,7 +421,7 @@ body.login-page .glass-card::after {
   );
 }
 
-/* Línea decorativa tricolor integrada en la parte superior de la tarjeta */
+/* Línea decorativa combinada Colombia/Portugal integrada en la tarjeta */
 body.login-page .glass-card::before {
   content: '';
   position: absolute;
@@ -397,16 +430,18 @@ body.login-page .glass-card::before {
   right: 0;
   height: 4px;
   background: linear-gradient(to right, 
-    var(--col-yellow) 0%, var(--col-yellow) 50%, 
-    var(--col-blue) 50%, var(--col-blue) 75%, 
-    var(--col-red) 75%, var(--col-red) 100%
+    var(--col-yellow) 0%, var(--col-yellow) 25%, 
+    var(--col-blue) 25%, var(--col-blue) 37.5%, 
+    var(--col-red) 37.5%, var(--col-red) 50%,
+    var(--portugal-green) 50%, var(--portugal-green) 70%,
+    var(--portugal-red) 70%, var(--portugal-red) 100%
   );
   z-index: 5;
 }
 
-/* Título patriótico con degradado en los colores de la bandera */
+/* Título patriótico con degradado en los colores de ambas selecciones */
 body.login-page .title-patriotic {
-  background: linear-gradient(135deg, #FFCD00 0%, #003087 55%, #C8102E 100%);
+  background: linear-gradient(135deg, #FFCD00 0%, #003087 25%, #C8102E 50%, #046A38 75%, #DA291C 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
@@ -420,11 +455,26 @@ body.login-page .subtitle {
   font-weight: 500;
 }
 
-/* Contenedor de la bandera en el login */
-body.login-page .flag-container {
-  border: 3px solid #FFCD00;
-  box-shadow: 0 4px 15px rgba(255, 205, 0, 0.3);
+/* Estilos específicos de las banderas dentro del login para Colombia y Portugal */
+body.login-page .flags-wrapper .flag-container {
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+  transition: var(--transition);
+}
+
+body.login-page .flags-wrapper .flag-container:first-of-type {
+  border-color: #FFCD00;
+  box-shadow: 0 4px 15px rgba(255, 205, 0, 0.25);
+}
+
+body.login-page .flags-wrapper .flag-container:last-of-type {
+  border-color: #046A38;
+  box-shadow: 0 4px 15px rgba(4, 106, 56, 0.25);
+}
+
+body.login-page .flags-wrapper .flag-container:hover {
+  transform: scale(1.1);
 }
 
 /* Campo de entrada */
