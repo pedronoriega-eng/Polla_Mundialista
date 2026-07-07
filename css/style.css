@@ -10,11 +10,10 @@
   --col-blue: #003087;
   --col-red: #C8102E;
   
-  /* Paleta de Portugal */
-  --portugal-green: #046A38;
-  --portugal-red: #DA291C;
-  --portugal-green-glow: rgba(4, 106, 56, 0.2);
-  --portugal-red-glow: rgba(218, 41, 28, 0.2);
+  /* Paleta de Suiza */
+  --suiza-red: #d52b1e;
+  --suiza-white: #ffffff;
+  --suiza-red-glow: rgba(213, 43, 30, 0.25);
   
   /* Variantes translúcidas y glows */
   --yellow-glow: rgba(255, 205, 0, 0.2);
@@ -265,8 +264,8 @@ body.login-page .team-login:first-of-type .flag-rect {
 }
 
 body.login-page .team-login:last-of-type .flag-rect {
-  border-color: #046A38;
-  box-shadow: 0 4px 12px rgba(4, 106, 56, 0.25);
+  border-color: var(--suiza-red);
+  box-shadow: 0 4px 12px var(--suiza-red-glow);
 }
 
 .flag-rect:hover {
@@ -434,7 +433,7 @@ body.login-page .vs-login {
    ESTILOS PREMIUM PANTALLA DE INGRESO (LIGHT THEME TRICOLOR)
    ========================================== */
 
-/* Fondo claro y degradados sutiles con colores de Colombia y Portugal */
+/* Fondo claro y degradados sutiles con colores de Colombia y Suiza */
 body.login-page {
   background-color: #f3f4f6;
   color: #1e293b;
@@ -442,20 +441,20 @@ body.login-page {
     radial-gradient(circle at 10% 20%, rgba(255, 205, 0, 0.14) 0%, transparent 40%),
     radial-gradient(circle at 10% 60%, rgba(0, 48, 135, 0.08) 0%, transparent 40%),
     radial-gradient(circle at 20% 90%, rgba(200, 16, 46, 0.06) 0%, transparent 40%),
-    radial-gradient(circle at 90% 20%, rgba(4, 106, 56, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 80% 80%, rgba(218, 41, 28, 0.08) 0%, transparent 45%);
+    radial-gradient(circle at 90% 20%, rgba(213, 43, 30, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.25) 0%, transparent 45%);
   background-attachment: fixed;
 }
 
-/* Decoración superior con franjas combinadas de Colombia (50%) y Portugal (50%) */
+/* Decoración superior con franjas combinadas de Colombia (50%) y Suiza (50%) */
 body.login-page::before {
   height: 6px;
   background: linear-gradient(to right, 
     #FFCD00 0%, #FFCD00 25%, 
     #003087 25%, #003087 37.5%, 
     #C8102E 37.5%, #C8102E 50%,
-    #046A38 50%, #046A38 70%,
-    #DA291C 70%, #DA291C 100%
+    #D52B1E 50%, #D52B1E 75%,
+    #FFFFFF 75%, #FFFFFF 100%
   );
 }
 
@@ -479,7 +478,7 @@ body.login-page .glass-card::after {
   );
 }
 
-/* Línea decorativa combinada Colombia/Portugal integrada en la tarjeta */
+/* Línea decorativa combinada Colombia/Suiza integrada en la tarjeta */
 body.login-page .glass-card::before {
   content: '';
   position: absolute;
@@ -491,15 +490,15 @@ body.login-page .glass-card::before {
     var(--col-yellow) 0%, var(--col-yellow) 25%, 
     var(--col-blue) 25%, var(--col-blue) 37.5%, 
     var(--col-red) 37.5%, var(--col-red) 50%,
-    var(--portugal-green) 50%, var(--portugal-green) 70%,
-    var(--portugal-red) 70%, var(--portugal-red) 100%
+    var(--suiza-red) 50%, var(--suiza-red) 75%,
+    var(--suiza-white) 75%, var(--suiza-white) 100%
   );
   z-index: 5;
 }
 
 /* Título patriótico con degradado en los colores de ambas selecciones */
 body.login-page .title-patriotic {
-  background: linear-gradient(135deg, #FFCD00 0%, #003087 25%, #C8102E 50%, #046A38 75%, #DA291C 100%);
+  background: linear-gradient(135deg, #FFCD00 0%, #003087 35%, #C8102E 65%, #D52B1E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: none;

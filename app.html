@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registra tu Pronóstico - Polla Tricolor</title>
   <link rel="stylesheet" href="css/style.css">
-  <meta name="description" content="Ingresa tu marcador para el partido Colombia vs. Portugal en la polla oficial.">
+  <meta name="description" content="Ingresa tu marcador para el partido Colombia vs. Suiza en la polla oficial.">
   <!-- Supabase CDN y configuración -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
@@ -63,8 +63,8 @@
         </div>
         <div class="vs-badge">VS</div>
         <div class="team">
-          <img src="https://flagcdn.com/w160/pt.png" alt="Bandera de Portugal" class="team-flag">
-          <span class="team-name">Portugal</span>
+          <img src="https://flagcdn.com/w160/ch.png" alt="Bandera de Suiza" class="team-flag">
+          <span class="team-name">Suiza</span>
         </div>
       </div>
 
@@ -108,7 +108,7 @@
               placeholder="0" 
               required
             >
-            <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles Portugal</div>
+            <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles Suiza</div>
           </div>
         </div>
 
@@ -124,7 +124,7 @@
       <div style="font-size: 3.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(255, 205, 0, 0.3));">🏆</div>
       <h2 class="title-patriotic" style="font-size: 1.6rem; margin-bottom: 0.5rem;">¡Pronóstico Registrado!</h2>
       <p style="color: var(--text-slate); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.4;">
-        Tu apuesta para el partido <strong style="color: var(--col-yellow);">Colombia vs. Portugal</strong> ha sido guardada correctamente en el sistema.
+        Tu apuesta para el partido <strong style="color: var(--col-yellow);">Colombia vs. Suiza</strong> ha sido guardada correctamente en el sistema.
       </p>
       
       <div style="background: rgba(10, 15, 29, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 16px; margin-bottom: 2rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
@@ -178,7 +178,7 @@
     // Función auxiliar para calcular ganador
     function calcularGanador(golesCol, golesPor) {
       if (golesCol > golesPor) return "Colombia";
-      if (golesPor > golesCol) return "Portugal";
+      if (golesPor > golesCol) return "Suiza";
       return "Empate";
     }
 
@@ -214,7 +214,8 @@
         pronostico: {
           goles_colombia: golesCol,
           goles_congo: golesPor, // Compatibilidad bidireccional y registros previos en Supabase
-          goles_portugal: golesPor, // Nueva propiedad
+          goles_portugal: golesPor, // Compatibilidad con versión anterior
+          goles_suiza: golesPor, // Nueva propiedad para Suiza
           ganador: ganador
         },
         fecha_apuesta: new Date().toISOString()

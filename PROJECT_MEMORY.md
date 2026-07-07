@@ -1,4 +1,4 @@
-# Memoria del Proyecto - Sistema de Apuestas (Quiniela) Colombia vs. Portugal
+# Memoria del Proyecto - Sistema de Apuestas (Quiniela) Colombia vs. Suiza
 
 Este documento registra las especificaciones de diseño, estructura de datos y arquitectura para la aplicación web de apuestas deportivas.
 
@@ -38,15 +38,20 @@ La aplicación utiliza un servicio backend Serverless (Supabase o Firebase) para
         "goles_portugal": {
           "type": "integer",
           "minimum": 0,
-          "description": "Goles pronosticados para Portugal"
+          "description": "Goles pronosticados para Portugal (Mantenido para compatibilidad de registros previos)"
+        },
+        "goles_suiza": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Goles pronosticados para Suiza"
         },
         "ganador": {
           "type": "string",
-          "enum": ["Colombia", "Portugal", "República del Congo", "Empate"],
+          "enum": ["Colombia", "Suiza", "Portugal", "República del Congo", "Empate"],
           "description": "Cálculo directo del equipo ganador según los goles."
         }
       },
-      "required": ["goles_colombia", "goles_congo", "goles_portugal", "ganador"]
+      "required": ["goles_colombia", "goles_congo", "goles_portugal", "goles_suiza", "ganador"]
     },
     "fecha_apuesta": {
       "type": "string",
@@ -68,6 +73,7 @@ La aplicación utiliza un servicio backend Serverless (Supabase o Firebase) para
     "goles_colombia": 3,
     "goles_congo": 1,
     "goles_portugal": 1,
+    "goles_suiza": 1,
     "ganador": "Colombia"
   },
   "fecha_apuesta": "2026-06-18T08:05:00-05:00"
@@ -83,6 +89,6 @@ sistema-apuestas/
 ├── app.html                # Formulario principal de apuesta (Tarjeta de partido)
 ├── dashboard.html          # Visualización de apuestas y liquidación (Contraseña Pnoriega_123)
 └── css/
-    └── style.css           # Estilos patrios unificados (Colombia/Portugal Theme)
+    └── style.css           # Estilos patrios unificados (Colombia/Suiza Theme)
 ```
 
