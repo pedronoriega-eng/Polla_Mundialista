@@ -58,13 +58,13 @@
       <!-- Tarjeta del Partido -->
       <div class="match-card">
         <div class="team">
-          <img src="https://flagcdn.com/w160/co.png" alt="Bandera de Colombia" class="team-flag">
-          <span class="team-name">Colombia</span>
+          <img src="https://flagcdn.com/w160/ar.png" alt="Bandera de Argentina" class="team-flag">
+          <span class="team-name">Argentina</span>
         </div>
         <div class="vs-badge">VS</div>
         <div class="team">
-          <img src="https://flagcdn.com/w160/ch.png" alt="Bandera de Suiza" class="team-flag">
-          <span class="team-name">Suiza</span>
+          <img src="https://flagcdn.com/w160/es.png" alt="Bandera de España" class="team-flag">
+          <span class="team-name">España</span>
         </div>
       </div>
 
@@ -86,14 +86,14 @@
           <div class="team-prediction">
             <input 
               type="number" 
-              id="goals-col" 
+              id="goals-arg" 
               class="input-field score-input" 
               min="0" 
               max="20" 
               placeholder="0" 
               required
             >
-            <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles COL</div>
+            <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles ARG</div>
           </div>
           
           <div class="score-divider">:</div>
@@ -101,14 +101,14 @@
           <div class="team-prediction">
             <input 
               type="number" 
-              id="goals-por" 
+              id="goals-esp" 
               class="input-field score-input" 
               min="0" 
               max="20" 
               placeholder="0" 
               required
             >
-            <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles Suiza</div>
+            <div style="font-size: 0.75rem; text-align: center; margin-top: 0.5rem; color: var(--text-slate);">Goles ESP</div>
           </div>
         </div>
 
@@ -124,7 +124,7 @@
       <div style="font-size: 3.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(255, 205, 0, 0.3));">🏆</div>
       <h2 class="title-patriotic" style="font-size: 1.6rem; margin-bottom: 0.5rem;">¡Pronóstico Registrado!</h2>
       <p style="color: var(--text-slate); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.4;">
-        Tu apuesta para el partido <strong style="color: var(--col-yellow);">Colombia vs. Suiza</strong> ha sido guardada correctamente en el sistema.
+        Tu apuesta para la final <strong style="color: var(--col-yellow);">Argentina vs. España</strong> ha sido guardada correctamente en el sistema.
       </p>
       
       <div style="background: rgba(10, 15, 29, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); padding: 1.25rem; border-radius: 16px; margin-bottom: 2rem; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
@@ -170,15 +170,15 @@
 
     const betForm = document.getElementById('bet-form');
     const fullnameInput = document.getElementById('fullname');
-    const goalsColInput = document.getElementById('goals-col');
-    const goalsCgoInput = document.getElementById('goals-por');
+    const goalsArgInput = document.getElementById('goals-arg');
+    const goalsEspInput = document.getElementById('goals-esp');
     const notification = document.getElementById('notification');
     const submitBtn = document.getElementById('submit-btn');
 
     // Función auxiliar para calcular ganador
-    function calcularGanador(golesCol, golesPor) {
-      if (golesCol > golesPor) return "Colombia";
-      if (golesPor > golesCol) return "Suiza";
+    function calcularGanador(golesArg, golesEsp) {
+      if (golesArg > golesEsp) return "Argentina";
+      if (golesEsp > golesArg) return "España";
       return "Empate";
     }
 
@@ -195,9 +195,9 @@
         }
       } else {
         // Fallback a LocalStorage local
-        let apuestasLocales = JSON.parse(localStorage.getItem('apuestas_tricolor') || '[]');
+        let apuestasLocales = JSON.parse(localStorage.getItem('apuestas_mundialista') || '[]');
         apuestasLocales.push(apuestaData);
-        localStorage.setItem('apuestas_tricolor', JSON.stringify(apuestasLocales));
+        localStorage.setItem('apuestas_mundialista', JSON.stringify(apuestasLocales));
       }
       return true;
     }
@@ -205,17 +205,15 @@
     betForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const golesCol = parseInt(goalsColInput.value);
-      const golesPor = parseInt(goalsCgoInput.value);
-      const ganador = calcularGanador(golesCol, golesPor);
+      const golesArg = parseInt(goalsArgInput.value);
+      const golesEsp = parseInt(goalsEspInput.value);
+      const ganador = calcularGanador(golesArg, golesEsp);
       
       const apuestaData = {
         nombre_apostador: fullnameInput.value.trim(),
         pronostico: {
-          goles_colombia: golesCol,
-          goles_congo: golesPor, // Compatibilidad bidireccional y registros previos en Supabase
-          goles_portugal: golesPor, // Compatibilidad con versión anterior
-          goles_suiza: golesPor, // Nueva propiedad para Suiza
+          goles_argentina: golesArg,
+          goles_espana: golesEsp,
           ganador: ganador
         },
         fecha_apuesta: new Date().toISOString()
@@ -234,7 +232,7 @@
         
         // Cargar los datos en la tarjeta de resumen
         document.getElementById('summary-name').innerText = apuestaData.nombre_apostador;
-        document.getElementById('summary-score').innerText = `${golesCol} - ${golesPor}`;
+        document.getElementById('summary-score').innerText = `${golesArg} - ${golesEsp}`;
 
         // Limpiar formulario
         betForm.reset();

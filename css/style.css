@@ -5,21 +5,29 @@
   --bg-card: rgba(20, 27, 45, 0.75);
   --border-glow: rgba(255, 255, 255, 0.08);
   
-  /* Paleta Patria de Colombia (Ajustada para diseño premium) */
-  --col-yellow: #FFCD00;
-  --col-blue: #003087;
-  --col-red: #C8102E;
+  /* Paleta de Argentina */
+  --arg-blue: #74acdf;
+  --arg-white: #ffffff;
+  --arg-gold: #f6b512;
   
-  /* Paleta de Suiza */
-  --suiza-red: #d52b1e;
+  /* Paleta de España */
+  --esp-red: #c60b1e;
+  --esp-yellow: #ffc400;
+  
+  /* Mapeo para compatibilidad y consistencia visual */
+  --col-yellow: #f6b512;
+  --col-blue: #74acdf;
+  --col-red: #c60b1e;
+  
+  --suiza-red: #c60b1e;
   --suiza-white: #ffffff;
-  --suiza-red-glow: rgba(213, 43, 30, 0.25);
+  --suiza-red-glow: rgba(198, 11, 30, 0.25);
   
   /* Variantes translúcidas y glows */
-  --yellow-glow: rgba(255, 205, 0, 0.2);
-  --yellow-light: rgba(255, 205, 0, 0.1);
-  --blue-glow: rgba(0, 48, 135, 0.4);
-  --red-glow: rgba(200, 16, 46, 0.3);
+  --yellow-glow: rgba(246, 181, 18, 0.25);
+  --yellow-light: rgba(246, 181, 18, 0.1);
+  --blue-glow: rgba(116, 172, 223, 0.35);
+  --red-glow: rgba(198, 11, 30, 0.25);
   
   --text-white: #f8fafc;
   --text-slate: #94a3b8;
@@ -48,11 +56,11 @@ body {
   background-image: 
     radial-gradient(circle at 10% 20%, var(--yellow-light) 0%, transparent 40%),
     radial-gradient(circle at 90% 80%, var(--blue-glow) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(200, 16, 46, 0.05) 0%, transparent 60%);
+    radial-gradient(circle at 50% 50%, rgba(198, 11, 30, 0.04) 0%, transparent 60%);
   background-attachment: fixed;
 }
 
-/* Decoraciones patrias de fondo */
+/* Decoraciones premium de fondo (Argentina & España) */
 body::before {
   content: '';
   position: absolute;
@@ -60,7 +68,14 @@ body::before {
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(to right, var(--col-yellow) 0%, var(--col-yellow) 50%, var(--col-blue) 50%, var(--col-blue) 75%, var(--col-red) 75%, var(--col-red) 100%);
+  background: linear-gradient(to right, 
+    #74acdf 0%, #74acdf 16.6%, 
+    #ffffff 16.6%, #ffffff 33.3%, 
+    #74acdf 33.3%, #74acdf 50%,
+    #c60b1e 50%, #c60b1e 66.6%,
+    #ffc400 66.6%, #ffc400 83.3%,
+    #c60b1e 83.3%, #c60b1e 100%
+  );
   z-index: 10;
 }
 
@@ -259,13 +274,13 @@ body.login-page .flag-rect {
 }
 
 body.login-page .team-login:first-of-type .flag-rect {
-  border-color: #FFCD00;
-  box-shadow: 0 4px 12px rgba(255, 205, 0, 0.25);
+  border-color: #74acdf;
+  box-shadow: 0 4px 12px rgba(116, 172, 223, 0.35);
 }
 
 body.login-page .team-login:last-of-type .flag-rect {
-  border-color: var(--suiza-red);
-  box-shadow: 0 4px 12px var(--suiza-red-glow);
+  border-color: #c60b1e;
+  box-shadow: 0 4px 12px rgba(198, 11, 30, 0.35);
 }
 
 .flag-rect:hover {
@@ -433,28 +448,29 @@ body.login-page .vs-login {
    ESTILOS PREMIUM PANTALLA DE INGRESO (LIGHT THEME TRICOLOR)
    ========================================== */
 
-/* Fondo claro y degradados sutiles con colores de Colombia y Suiza */
+/* Fondo claro y degradados sutiles con colores de Argentina y España */
 body.login-page {
   background-color: #f3f4f6;
   color: #1e293b;
   background-image: 
-    radial-gradient(circle at 10% 20%, rgba(255, 205, 0, 0.14) 0%, transparent 40%),
-    radial-gradient(circle at 10% 60%, rgba(0, 48, 135, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 20% 90%, rgba(200, 16, 46, 0.06) 0%, transparent 40%),
-    radial-gradient(circle at 90% 20%, rgba(213, 43, 30, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 10% 20%, rgba(246, 181, 18, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 10% 60%, rgba(116, 172, 223, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 20% 90%, rgba(198, 11, 30, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 20%, rgba(198, 11, 30, 0.06) 0%, transparent 45%),
     radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.25) 0%, transparent 45%);
   background-attachment: fixed;
 }
 
-/* Decoración superior con franjas combinadas de Colombia (50%) y Suiza (50%) */
+/* Decoración superior con franjas combinadas de Argentina (50%) y España (50%) */
 body.login-page::before {
   height: 6px;
   background: linear-gradient(to right, 
-    #FFCD00 0%, #FFCD00 25%, 
-    #003087 25%, #003087 37.5%, 
-    #C8102E 37.5%, #C8102E 50%,
-    #D52B1E 50%, #D52B1E 75%,
-    #FFFFFF 75%, #FFFFFF 100%
+    #74acdf 0%, #74acdf 16.6%, 
+    #ffffff 16.6%, #ffffff 33.3%, 
+    #74acdf 33.3%, #74acdf 50%,
+    #c60b1e 50%, #c60b1e 66.6%,
+    #ffc400 66.6%, #ffc400 83.3%,
+    #c60b1e 83.3%, #c60b1e 100%
   );
 }
 
@@ -478,7 +494,7 @@ body.login-page .glass-card::after {
   );
 }
 
-/* Línea decorativa combinada Colombia/Suiza integrada en la tarjeta */
+/* Línea decorativa combinada Argentina/España integrada en la tarjeta */
 body.login-page .glass-card::before {
   content: '';
   position: absolute;
@@ -487,18 +503,19 @@ body.login-page .glass-card::before {
   right: 0;
   height: 4px;
   background: linear-gradient(to right, 
-    var(--col-yellow) 0%, var(--col-yellow) 25%, 
-    var(--col-blue) 25%, var(--col-blue) 37.5%, 
-    var(--col-red) 37.5%, var(--col-red) 50%,
-    var(--suiza-red) 50%, var(--suiza-red) 75%,
-    var(--suiza-white) 75%, var(--suiza-white) 100%
+    #74acdf 0%, #74acdf 16.6%, 
+    #ffffff 16.6%, #ffffff 33.3%, 
+    #74acdf 33.3%, #74acdf 50%,
+    #c60b1e 50%, #c60b1e 66.6%,
+    #ffc400 66.6%, #ffc400 83.3%,
+    #c60b1e 83.3%, #c60b1e 100%
   );
   z-index: 5;
 }
 
 /* Título patriótico con degradado en los colores de ambas selecciones */
 body.login-page .title-patriotic {
-  background: linear-gradient(135deg, #FFCD00 0%, #003087 35%, #C8102E 65%, #D52B1E 100%);
+  background: linear-gradient(135deg, #74acdf 0%, #74acdf 35%, #c60b1e 65%, #ffc400 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
@@ -559,4 +576,17 @@ body.login-page .btn-primary:hover {
 body.login-page .btn-primary svg {
   stroke: #0b1329;
 }
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
 

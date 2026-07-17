@@ -1,4 +1,4 @@
-# Memoria del Proyecto - Sistema de Apuestas (Quiniela) Colombia vs. Suiza
+# Memoria del Proyecto - Sistema de Apuestas (Quiniela) Argentina vs. España (Final del Mundial)
 
 Este documento registra las especificaciones de diseño, estructura de datos y arquitectura para la aplicación web de apuestas deportivas.
 
@@ -25,33 +25,23 @@ La aplicación utiliza un servicio backend Serverless (Supabase o Firebase) para
       "type": "object",
       "description": "El marcador exacto pronosticado para el partido.",
       "properties": {
-        "goles_colombia": {
+        "goles_argentina": {
           "type": "integer",
           "minimum": 0,
-          "description": "Goles pronosticados para Colombia"
+          "description": "Goles pronosticados para Argentina"
         },
-        "goles_congo": {
+        "goles_espana": {
           "type": "integer",
           "minimum": 0,
-          "description": "Goles pronosticados para República del Congo (Mantenido para compatibilidad de registros previos)"
-        },
-        "goles_portugal": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Goles pronosticados para Portugal (Mantenido para compatibilidad de registros previos)"
-        },
-        "goles_suiza": {
-          "type": "integer",
-          "minimum": 0,
-          "description": "Goles pronosticados para Suiza"
+          "description": "Goles pronosticados para España"
         },
         "ganador": {
           "type": "string",
-          "enum": ["Colombia", "Suiza", "Portugal", "República del Congo", "Empate"],
+          "enum": ["Argentina", "España", "Empate"],
           "description": "Cálculo directo del equipo ganador según los goles."
         }
       },
-      "required": ["goles_colombia", "goles_congo", "goles_portugal", "goles_suiza", "ganador"]
+      "required": ["goles_argentina", "goles_espana", "ganador"]
     },
     "fecha_apuesta": {
       "type": "string",
@@ -70,15 +60,19 @@ La aplicación utiliza un servicio backend Serverless (Supabase o Firebase) para
   "id": "apuesta_78a2d1f9-03b5-4cde-a178-e8cb9b6a98fb",
   "nombre_apostador": "Pedro Pérez",
   "pronostico": {
-    "goles_colombia": 3,
-    "goles_congo": 1,
-    "goles_portugal": 1,
-    "goles_suiza": 1,
-    "ganador": "Colombia"
+    "goles_argentina": 2,
+    "goles_espana": 1,
+    "ganador": "Argentina"
   },
-  "fecha_apuesta": "2026-06-18T08:05:00-05:00"
+  "fecha_apuesta": "2026-07-17T15:30:00-05:00"
 }
 ```
+
+## Reglas del Pozo (Acumulado)
+- El pozo se inicia con un acumulado base de **COP $85.000**.
+- Cada apuesta registrada suma un valor unitario de **COP $5.000** al acumulado total.
+- Pozo Total = $85.000 + (Cantidad de Apuestas * $5.000).
+
 
 ## Arquitectura del Proyecto
 
@@ -89,6 +83,6 @@ sistema-apuestas/
 ├── app.html                # Formulario principal de apuesta (Tarjeta de partido)
 ├── dashboard.html          # Visualización de apuestas y liquidación (Contraseña Pnoriega_123)
 └── css/
-    └── style.css           # Estilos patrios unificados (Colombia/Suiza Theme)
+    └── style.css           # Estilos premium unificados (Argentina/España Theme)
 ```
 
